@@ -8,8 +8,16 @@ defmodule Bson.Mixfile do
       elixir: "~> 1.0 or ~> 1.1",
       description: "BSON implementation for Elixir",
       source_url: "https://github.com/checkiz/elixir-bson",
-      deps: deps(Mix.env),
-      package: package,
+      test_coverage: [tool: ExCoveralls],
+      preferred_cli_env: [
+        coveralls: :test,
+        "coveralls.detail": :test,
+        "coveralls.post": :test,
+        "coveralls.html": :test,
+        "coveralls.travis": :test
+      ],
+      deps: deps(),
+      package: package(),
       docs: &docs/0 ]
   end
 
@@ -19,13 +27,13 @@ defmodule Bson.Mixfile do
   end
 
   # Returns the list of dependencies in the format:
-  defp deps(:docs) do
+  defp deps do
     [
-      {:ex_doc, ">= 0.0.0" },
-      {:earmark, ">= 0.0.0"}
+      {:ex_doc, ">= 0.0.0", only: :docs},
+      {:earmark, ">= 0.0.0", only: :docs},
+      {:excoveralls, "~> 0.7.3", only: :test}
     ]
   end
-  defp deps(_), do: []
 
   defp docs do
     [ #readme: true,
