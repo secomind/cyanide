@@ -2,12 +2,12 @@ defmodule Bson.Mixfile do
   use Mix.Project
 
   def project do
-    [ app: :bson,
-      name: "bson",
-      version: "0.4.4",
-      elixir: "~> 1.0 or ~> 1.1",
+    [
+      app: :cyanide,
+      name: "Cyanide",
+      version: "0.5.0",
+      elixir: "~> 1.4",
       description: "BSON implementation for Elixir",
-      source_url: "https://github.com/checkiz/elixir-bson",
       test_coverage: [tool: ExCoveralls],
       preferred_cli_env: [
         coveralls: :test,
@@ -18,7 +18,9 @@ defmodule Bson.Mixfile do
       ],
       deps: deps(),
       package: package(),
-      docs: &docs/0 ]
+      source_url: "https://github.com/ispirata/cyanide",
+      docs: [main: "Cyanide"]
+    ]
   end
 
   # Configuration for the OTP application
@@ -29,24 +31,20 @@ defmodule Bson.Mixfile do
   # Returns the list of dependencies in the format:
   defp deps do
     [
-      {:ex_doc, ">= 0.0.0", only: :docs},
-      {:earmark, ">= 0.0.0", only: :docs},
+      {:ex_doc, "~> 0.16", only: :dev, runtime: false},
       {:excoveralls, "~> 0.7.3", only: :test}
     ]
   end
 
-  defp docs do
-    [ #readme: true,
-      #main: "README",
-      source_ref: System.cmd("git", ["rev-parse", "--verify", "--quiet", "HEAD"])|>elem(0) ]
-  end
-
   defp package do
-    [ contributors: ["jerp"],
+    [
+      description: "An Elixir BSON encoding/decoding library.",
+      maintainers: ["Davide Bettio", "Riccardo Binetti"],
       licenses: ["MIT"],
       links: %{
-        "GitHub" => "https://github.com/checkiz/elixir-bson",
-        "Documentation" => "http://hexdocs.pm/bson/"
-      } ]
+        "GitHub" => "https://github.com/ispirata/cyanide",
+        "Documentation" => "http://hexdocs.pm/cyanide/"
+      }
+    ]
   end
 end
