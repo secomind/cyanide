@@ -1,6 +1,6 @@
 Cyanide
 =======
-[![Build Status](https://travis-ci.org/ispirata/cyanide)](https://travis-ci.org/ispirata/cyanide)
+[![Build Status](https://travis-ci.org/ispirata/cyanide.svg?branch=master)](https://travis-ci.org/ispirata/cyanide)
 [![Coverage Status](https://coveralls.io/repos/github/ispirata/cyanide/badge.svg?branch=master)](https://coveralls.io/github/ispirata/cyanide?branch=master)
 [![Hex Version](https://img.shields.io/hexpm/v/cyanide.svg)](https://hex.pm/packages/cyanide)
 [![Hex Downloads](https://img.shields.io/hexpm/dt/cyanide.svg)](https://hex.pm/packages/cyanide)
