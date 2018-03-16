@@ -7,17 +7,17 @@ defmodule Bson.Test do
   doctest Bson.ObjectId
   doctest Bson.UTC
   doctest Bson.Decoder
-  doctest Bson.Encoder.Protocol.Float
-  doctest Bson.Encoder.Protocol.Integer
-  doctest Bson.Encoder.Protocol.Atom
-  doctest Bson.Encoder.Protocol.Bson.Regex
-  doctest Bson.Encoder.Protocol.Bson.ObjectId
-  doctest Bson.Encoder.Protocol.Bson.JS
-  doctest Bson.Encoder.Protocol.Bson.Bin
-  doctest Bson.Encoder.Protocol.Bson.Timestamp
-  doctest Bson.Encoder.Protocol.BitString
-  doctest Bson.Encoder.Protocol.Bson.UTC
-  doctest Bson.Encoder.Protocol.List
-  doctest Bson.Encoder.Protocol.Map
+  doctest Cyanide.Encoder.Float
+  doctest Cyanide.Encoder.Integer
+  doctest Cyanide.Encoder.Atom
+  doctest Cyanide.Encoder.Bson.Regex
+  doctest Cyanide.Encoder.Bson.ObjectId
+  doctest Cyanide.Encoder.Bson.JS
+  doctest Cyanide.Encoder.Bson.Bin
+  doctest Cyanide.Encoder.Bson.Timestamp
+  doctest Cyanide.Encoder.BitString
+  doctest Cyanide.Encoder.Bson.UTC
+  doctest Cyanide.Encoder.List
+  doctest Cyanide.Encoder.Map
 
 end
