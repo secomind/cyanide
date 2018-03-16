@@ -5,7 +5,7 @@ Cyanide
 [![Hex Version](https://img.shields.io/hexpm/v/cyanide.svg)](https://hex.pm/packages/cyanide)
 [![Hex Downloads](https://img.shields.io/hexpm/dt/cyanide.svg)](https://hex.pm/packages/cyanide)
 
-BSON implementation for Elixir Language (based on [elixir-bson](https://github.com/checkiz/elixir-bson)) with support for recent Elixir versions.
+BSON implementation for Elixir Language (based on [elixir-bson](https://github.com/checkiz/elixir-bson), and it can be used as drop-in replacement) with support for recent Elixir versions.
 
 Cyanide on GitHub [source repo](https://github.com/ispirata/cyanide)
 
