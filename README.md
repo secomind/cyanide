@@ -1,20 +1,17 @@
-elixir-bson
-===========
-[![Build Status](https://travis-ci.org/checkiz/elixir-bson.png?branch=master)](https://travis-ci.org/checkiz/elixir-bson)
-[![Hex Version](https://img.shields.io/hexpm/v/bson.svg)](https://hex.pm/packages/bson)
-[![Hex Downloads](https://img.shields.io/hexpm/dt/bson.svg)](https://hex.pm/packages/bson)
+Cyanide
+=======
+[![Build Status](https://travis-ci.org/ispirata/cyanide)](https://travis-ci.org/ispirata/cyanide)
+[![Coverage Status](https://coveralls.io/repos/github/ispirata/cyanide/badge.svg?branch=master)](https://coveralls.io/github/ispirata/cyanide?branch=master)
+[![Hex Version](https://img.shields.io/hexpm/v/cyanide.svg)](https://hex.pm/packages/cyanide)
+[![Hex Downloads](https://img.shields.io/hexpm/dt/cyanide.svg)](https://hex.pm/packages/cyanide)
 
-BSON implementation for Elixir Language
+BSON implementation for Elixir Language (based on [elixir-bson](https://github.com/checkiz/elixir-bson)) with support for recent Elixir versions.
 
-elixir-bson on GitHub [source repo](https://github.com/checkiz/elixir-bson) -
-[documentation](https://checkiz.github.io/elixir-bson)
-
+Cyanide on GitHub [source repo](https://github.com/ispirata/cyanide)
 
 BSON is a binary format in which zero or more key/value pairs are stored as a single entity, called a document. It is a data type with a standard binary representation defined at <http://www.bsonspec.org>.
 
 This implements version 1.0 of that spec.
-
-This project is used by [elixir-mongo](https://github.com/checkiz/elixir-mongo), a [MongoDB](http://www.mongodb.org) driver in Elixir.
 
 This implementation maps the Bson grammar with Elixir terms in the following way:
 
