@@ -69,8 +69,8 @@ defmodule Bson.Encoder do
     iex> Cyanide.Encoder.encode 0x8000000000000001
     %Bson.Encoder.Error{what: [Integer], term: 0x8000000000000001}
     """
-    def encode(i) when -0x80000000 <= i and i <= 0x80000000, do: {<<0x10>>, <<i::32-signed-little>>}
-    def encode(i) when -0x8000000000000000 <= i and i <= 0x8000000000000000, do: {<<0x12>>, <<i::64-signed-little>>}
+    def encode(i) when i >= -2_147_483_648 and i <= 2_147_483_647, do: {<<0x10>>, <<i::32-signed-little>>}
+    def encode(i) when i >= -9_223_372_036_854_775_808 and i <= 9_223_372_036_854_775_807, do: {<<0x12>>, <<i::64-signed-little>>}
     def encode(i), do: %Error{what: [Integer], term: i}
   end
 
