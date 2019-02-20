@@ -5,7 +5,7 @@ defmodule Bson.Mixfile do
     [
       app: :cyanide,
       name: "Cyanide",
-      version: "0.5.0",
+      version: "0.5.1",
       elixir: "~> 1.4",
       description: "BSON implementation for Elixir",
       test_coverage: [tool: ExCoveralls],
