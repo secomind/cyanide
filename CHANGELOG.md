@@ -1,3 +1,9 @@
+# v0.5.1
+* fix integer encoding corruption
+
+# v0.5.0
+* build on recent Elixir
+
 # v0.4.4
 * fix compilation warning
 * fix documentation url
