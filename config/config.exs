@@ -1,4 +1,3 @@
+# This file is responsible for configuring your application
+# and its dependencies with the aid of the Mix.Config module.
 use Mix.Config
-
-config :bson,
-    decoder_new_doc: &Bson.Decoder.elist_to_atom_map/1
