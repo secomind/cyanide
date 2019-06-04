@@ -26,6 +26,7 @@ defmodule Cyanide do
           | boolean()
           | nil
           | integer()
+          | DateTime.t()
   @type bson_map :: %{optional(String.t()) => bson_type()}
 
   @spec decode(binary()) :: {:ok, bson_map()} | {:error, :invalid_bson}
