@@ -214,7 +214,7 @@ defmodule Cyanide do
     :error
   end
 
-  @spec encode(bson_map()) :: {:ok, binary()}
+  @spec encode(bson_map()) :: {:ok, binary()} | {:error, :cannot_bson_encode}
   def encode(document) do
     with {:ok, doc_iolist} <- document_to_iolist(document) do
       {:ok, :erlang.iolist_to_binary(doc_iolist)}
