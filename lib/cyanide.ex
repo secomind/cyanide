@@ -29,6 +29,9 @@ defmodule Cyanide do
           | DateTime.t()
   @type bson_map :: %{optional(String.t()) => bson_type()}
 
+  @type encodable_map_key :: atom() | String.t()
+  @type encodable_map :: %{encodable_map_key() => bson_type()}
+
   @spec decode(binary()) :: {:ok, bson_map()} | {:error, :invalid_bson}
   def decode(document) do
     with <<doc_size::little-32, rest::binary>> when doc_size == byte_size(rest) + 4 <- document,
@@ -214,7 +217,7 @@ defmodule Cyanide do
     :error
   end
 
-  @spec encode(bson_map()) :: {:ok, binary()} | {:error, :cannot_bson_encode}
+  @spec encode(encodable_map()) :: {:ok, binary()} | {:error, :cannot_bson_encode}
   def encode(document) do
     with {:ok, doc_iolist} <- document_to_iolist(document) do
       {:ok, :erlang.iolist_to_binary(doc_iolist)}
@@ -224,7 +227,7 @@ defmodule Cyanide do
     end
   end
 
-  @spec encode!(bson_map()) :: binary()
+  @spec encode!(encodable_map()) :: binary()
   def encode!(document) do
     {:ok, document_binary} = encode(document)
     document_binary
