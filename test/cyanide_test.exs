@@ -21,7 +21,7 @@ defmodule CyanideTest do
 
   test "encodes and decodes a map" do
     map1 = %{
-      "t" => DateTime.utc_now |> DateTime.to_unix(:millisecond),
+      "t" => DateTime.utc_now() |> DateTime.to_unix(:millisecond),
       "v" => %{
         "some_binary" => {0, <<0, 0, 0, 0>>},
         "array" => [1, 2, 3, 4, 5],
@@ -39,7 +39,7 @@ defmodule CyanideTest do
 
   test "encodes and decodes a complex map" do
     map2 = %{
-      "t" => DateTime.utc_now |> DateTime.to_unix(:millisecond),
+      "t" => DateTime.utc_now() |> DateTime.to_unix(:millisecond),
       "bin1" => {0, <<0, 1, 2, 3>>},
       "bin2" => {0, <<0>>},
       "bin3" => {0, <<>>},
