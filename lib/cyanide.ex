@@ -17,6 +17,7 @@
 #
 
 defmodule Cyanide do
+  alias Cyanide.Binary
   alias Cyanide.EncodedValue
   alias Cyanide.Encoder
 
@@ -25,6 +26,7 @@ defmodule Cyanide do
           | String.t()
           | bson_map()
           | list(bson_type())
+          | Binary.t()
           | {integer(), binary()}
           | boolean()
           | nil
@@ -152,6 +154,7 @@ defmodule Cyanide do
     end
   end
 
+  # TODO: Cyanide 2.0: incompatible change, use %Cyanide.Binary{} instead
   defp parse_value(0x5, map, key, <<subdoc_size::little-32, subtype::8, subdoc_and_rest::binary>>) do
     with the_size when the_size >= 0 <- subdoc_size,
          <<subdocument::binary-size(the_size), rest::binary>> <- subdoc_and_rest do
@@ -286,6 +289,22 @@ defmodule Cyanide do
     [<<0x2>>, key_string, <<0, string_size::signed-little-32>>, value | <<0>>]
   end
 
+  defp encode_value(key_string, %Binary{subtype: subtype, data: data}) do
+    subtype_int =
+      case subtype do
+        :generic -> 0x00
+        :function -> 0x01
+        :old_binary -> 0x02
+        :old_uuid -> 0x03
+        :uuid -> 0x04
+        :md5 -> 0x05
+        :encrypted_bson -> 0x06
+        ud when is_integer(ud) and ud >= 0x80 and ud <= 0xFF -> ud
+      end
+
+    encode_value(key_string, {subtype_int, data})
+  end
+
   defp encode_value(key_string, %DateTime{} = value) do
     timestamp_ms = DateTime.to_unix(value, :millisecond)
     [<<0x9>>, key_string, <<0>> | <<timestamp_ms::signed-little-64>>]
@@ -313,6 +332,7 @@ defmodule Cyanide do
     end
   end
 
+  @deprecated "use %Cyanide.Binary{} instead"
   defp encode_value(key_string, {subtype, value})
        when is_integer(subtype) and subtype >= 0 and subtype <= 255 and is_binary(value) do
     binary_size = byte_size(value)
