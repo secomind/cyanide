@@ -18,6 +18,7 @@
 
 defmodule CyanideEncodingTest do
   use ExUnit.Case
+  alias Cyanide.Binary
 
   test "encode an empty map" do
     empty_doc = <<5, 0, 0, 0, 0>>
@@ -178,6 +179,13 @@ defmodule CyanideEncodingTest do
     binary_bson_doc = <<20, 0, 0, 0, 5, 98, 105, 110, 0, 5, 0, 0, 0, 0, 0, 1, 0, 2, 0, 0>>
 
     assert Cyanide.encode(%{"bin" => {0, <<0, 1, 0, 2, 0>>}}) == {:ok, binary_bson_doc}
+  end
+
+  test "encode a map with a %Cyanide.Binary{} to bson" do
+    binary_bson_doc = <<20, 0, 0, 0, 5, 98, 105, 110, 0, 5, 0, 0, 0, 0, 0, 1, 0, 2, 0, 0>>
+
+    assert Cyanide.encode(%{"bin" => %Binary{subtype: :generic, data: <<0, 1, 0, 2, 0>>}}) ==
+             {:ok, binary_bson_doc}
   end
 
   test "encode nil value" do
