@@ -17,6 +17,9 @@
 #
 
 defmodule Cyanide do
+  alias Cyanide.EncodedValue
+  alias Cyanide.Encoder
+
   @type bson_type ::
           float()
           | String.t()
@@ -233,6 +236,13 @@ defmodule Cyanide do
     document_binary
   end
 
+  defp document_to_iolist(%_{} = struct) do
+    case Encoder.encode(struct) do
+      document when is_map(document) -> document_to_iolist(document)
+      _ -> :error
+    end
+  end
+
   defp document_to_iolist(document) do
     values_io_list =
       Enum.map(document, fn {key, value} ->
@@ -279,6 +289,16 @@ defmodule Cyanide do
   defp encode_value(key_string, %DateTime{} = value) do
     timestamp_ms = DateTime.to_unix(value, :millisecond)
     [<<0x9>>, key_string, <<0>> | <<timestamp_ms::signed-little-64>>]
+  end
+
+  defp encode_value(key_string, %_{} = encodable) do
+    case Encoder.encode(encodable) do
+      %EncodedValue{tag: tag, data: data} ->
+        [<<tag::8>>, key_string, <<0::8, data::binary>>]
+
+      any ->
+        encode_value(key_string, any)
+    end
   end
 
   defp encode_value(key_string, value) when is_map(value) do
