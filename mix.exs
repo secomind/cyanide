@@ -24,6 +24,7 @@ defmodule Cyanide.MixProject do
       app: :cyanide,
       version: "1.0.0",
       elixir: "~> 1.6",
+      elixirc_paths: elixirc_paths(Mix.env()),
       deps: deps(),
       package: package(),
       source_url: "https://github.com/ispirata/cyanide",
@@ -36,6 +37,9 @@ defmodule Cyanide.MixProject do
       ]
     ]
   end
+
+  defp elixirc_paths(:test), do: ["lib", "test/support"]
+  defp elixirc_paths(_), do: ["lib"]
 
   def application do
     [

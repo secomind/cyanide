@@ -186,6 +186,48 @@ defmodule CyanideEncodingTest do
     assert Cyanide.encode(%{"value" => nil}) == {:ok, nil_bson_doc}
   end
 
+  test "encode top level struct using map" do
+    test1 = %Test2{
+      a: 0,
+      b: 5
+    }
+
+    assert Cyanide.decode!(Cyanide.encode!(test1)) == %{"a" => 0, "b" => 5}
+  end
+
+  test "encode struct using EncodedValue struct" do
+    map = %{
+      "value1" => %Test1{
+        a: 0,
+        b: 5
+      },
+      value2: %Test1{
+        a: 3,
+        b: 3
+      }
+    }
+
+    assert Cyanide.decode!(Cyanide.encode!(map)) == %{"value1" => false, "value2" => true}
+  end
+
+  test "encode struct using map" do
+    map = %{
+      "value1" => %Test2{
+        a: 1,
+        b: 2
+      },
+      value2: %Test2{
+        a: 3,
+        b: 4
+      }
+    }
+
+    assert Cyanide.decode!(Cyanide.encode!(map)) == %{
+             "value1" => %{"a" => 1, "b" => 2},
+             "value2" => %{"a" => 3, "b" => 4}
+           }
+  end
+
   test "error on unencodable bson" do
     assert Cyanide.encode(%{v: {1}}) == {:error, :cannot_bson_encode}
 
