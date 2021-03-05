@@ -154,11 +154,11 @@ defmodule Cyanide do
     end
   end
 
-  # TODO: Cyanide 2.0: incompatible change, use %Cyanide.Binary{} instead
   defp parse_value(0x5, map, key, <<subdoc_size::little-32, subtype::8, subdoc_and_rest::binary>>) do
     with the_size when the_size >= 0 <- subdoc_size,
-         <<subdocument::binary-size(the_size), rest::binary>> <- subdoc_and_rest do
-      Map.put(map, key, {subtype, subdocument})
+         <<subdocument::binary-size(the_size), rest::binary>> <- subdoc_and_rest,
+         {:ok, subtype_atom} <- Binary.cast_subtype(subtype) do
+      Map.put(map, key, %Binary{subtype: subtype_atom, data: subdocument})
       |> parse_doc_bytes(rest)
     else
       _any ->
