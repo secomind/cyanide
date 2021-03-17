@@ -23,7 +23,7 @@ defmodule CyanideTest do
     map1 = %{
       "t" => DateTime.utc_now() |> DateTime.to_unix(:millisecond),
       "v" => %{
-        "some_binary" => {0, <<0, 0, 0, 0>>},
+        "some_binary" => %Cyanide.Binary{subtype: :generic, data: <<0, 0, 0, 0>>},
         "array" => [1, 2, 3, 4, 5],
         "some_bool" => true,
         "a_string" => "This is a string",
@@ -40,9 +40,9 @@ defmodule CyanideTest do
   test "encodes and decodes a complex map" do
     map2 = %{
       "t" => DateTime.utc_now() |> DateTime.to_unix(:millisecond),
-      "bin1" => {0, <<0, 1, 2, 3>>},
-      "bin2" => {0, <<0>>},
-      "bin3" => {0, <<>>},
+      "bin1" => %Cyanide.Binary{subtype: :generic, data: <<0, 1, 2, 3>>},
+      "bin2" => %Cyanide.Binary{subtype: :generic, data: <<0>>},
+      "bin3" => %Cyanide.Binary{subtype: :generic, data: <<>>},
       "map1" => %{},
       "map2" => %{"a" => true, "b" => false, "c" => nil},
       "map3" => %{

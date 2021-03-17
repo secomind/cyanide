@@ -42,7 +42,22 @@ defmodule Cyanide.Binary do
           | pos_integer()
 
   @type t() :: %__MODULE__{
-          subtype: pos_integer(),
+          subtype: subtype(),
           data: binary()
         }
+
+  @spec cast_subtype(byte) :: {:ok, subtype()} | :error
+  def cast_subtype(value) when is_integer(value) and value < 0xFF do
+    case value do
+      0 -> {:ok, :generic}
+      1 -> {:ok, :function}
+      2 -> {:ok, :old_binary}
+      3 -> {:ok, :old_uuid}
+      4 -> {:ok, :uuid}
+      5 -> {:ok, :md5}
+      6 -> {:ok, :encrypted_bson}
+      x when x >= 0x80 -> {:ok, x}
+      _ -> :error
+    end
+  end
 end

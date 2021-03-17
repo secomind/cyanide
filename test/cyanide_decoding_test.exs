@@ -182,7 +182,21 @@ defmodule CyanideDecodingTest do
   test "decode a single binary value map to bson" do
     binary_bson_doc = <<20, 0, 0, 0, 5, 98, 105, 110, 0, 5, 0, 0, 0, 0, 0, 1, 0, 2, 0, 0>>
 
-    assert Cyanide.decode(binary_bson_doc) == {:ok, %{"bin" => {0, <<0, 1, 0, 2, 0>>}}}
+    assert Cyanide.decode(binary_bson_doc) ==
+             {:ok, %{"bin" => %Cyanide.Binary{subtype: :generic, data: <<0, 1, 0, 2, 0>>}}}
+  end
+
+  test "decode a single binary value map with user defined subtype to bson" do
+    binary_bson_doc = <<20, 0, 0, 0, 5, 98, 105, 110, 0, 5, 0, 0, 0, 129, 0, 1, 0, 2, 0, 0>>
+
+    assert Cyanide.decode(binary_bson_doc) ==
+             {:ok, %{"bin" => %Cyanide.Binary{subtype: 129, data: <<0, 1, 0, 2, 0>>}}}
+  end
+
+  test "error on a single binary value map to bson when 0x06 < subtype < 0x80" do
+    binary_bson_doc = <<20, 0, 0, 0, 5, 98, 105, 110, 0, 5, 0, 0, 0, 7, 0, 1, 0, 2, 0, 0>>
+
+    assert Cyanide.decode(binary_bson_doc) == {:error, :invalid_bson}
   end
 
   test "decode nil value" do
