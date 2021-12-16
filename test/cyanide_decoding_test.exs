@@ -197,4 +197,11 @@ defmodule CyanideDecodingTest do
     assert Cyanide.decode(<<3, 0, 0>>) == {:error, :invalid_bson}
     assert Cyanide.decode(<<4, 0, 0, 0>>) == {:error, :invalid_bson}
   end
+
+  test "error on bson with malformed subdocument" do
+    assert Cyanide.decode(
+             <<32, 0, 0, 0, 4, 118, 0, 24, 0, 0, 0, 2, 48, 0, 4, 0, 0, 0, 192, 87, 100, 0, 2, 49,
+               0, 1, 0, 0, 0, 140, 0, 0>>
+           ) == {:error, :invalid_bson}
+  end
 end
