@@ -1,7 +1,7 @@
 #
 # This file is part of Cyanide.
 #
-# Copyright 2019 Ispirata Srl
+# Copyright 2019-2021 Ispirata Srl
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -22,7 +22,7 @@ defmodule Cyanide.MixProject do
   def project do
     [
       app: :cyanide,
-      version: "1.0.0",
+      version: "1.0.1",
       elixir: "~> 1.6",
       deps: deps(),
       package: package(),
