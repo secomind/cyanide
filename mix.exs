@@ -1,7 +1,7 @@
 #
 # This file is part of Cyanide.
 #
-# Copyright 2019-2021 Ispirata Srl
+# Copyright 2019-2023 SECO Mind Srl
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -22,12 +22,12 @@ defmodule Cyanide.MixProject do
   def project do
     [
       app: :cyanide,
-      version: "1.0.1",
+      version: "2.0.0",
       elixir: "~> 1.6",
       elixirc_paths: elixirc_paths(Mix.env()),
       deps: deps(),
       package: package(),
-      source_url: "https://github.com/ispirata/cyanide",
+      source_url: "https://github.com/secomind/cyanide",
       test_coverage: [tool: ExCoveralls],
       preferred_cli_env: [
         coveralls: :test,
@@ -61,7 +61,7 @@ defmodule Cyanide.MixProject do
       maintainers: ["Davide Bettio", "Riccardo Binetti"],
       licenses: ["Apache-2.0"],
       links: %{
-        "GitHub" => "https://github.com/ispirata/cyanide",
+        "GitHub" => "https://github.com/secomind/cyanide",
         "Documentation" => "http://hexdocs.pm/cyanide/"
       }
     ]
