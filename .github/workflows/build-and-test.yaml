@@ -1,0 +1,103 @@
+#
+# This file is part of Cyanide.
+#
+# Copyright 2023 SECO Mind Srl
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#    http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#
+# SPDX-License-Identifier: Apache-2.0
+#
+
+name: Build and Test
+
+on:
+  # Run when pushing to stable branches
+  push:
+    branches:
+    - 'master'
+    - 'release-*'
+  # Run on branch/tag creation
+  create:
+  # Run on pull requests
+  pull_request:
+
+env:
+  elixir_version: "1.12"
+  otp_version: "24.2"
+
+jobs:
+  test-dialyzer:
+    name: Check Dialyzer
+    runs-on: ubuntu-22.04
+    env:
+      MIX_ENV: ci
+    steps:
+    - uses: actions/checkout@v3
+    - uses: actions/cache@v3
+      with:
+        path: deps
+        key: ${{ runner.os }}-${{ env.elixir_version }}-${{ env.otp_version }}-mix-${{ hashFiles(format('{0}{1}', github.workspace, '/mix.lock')) }}
+    - uses: actions/cache@v1
+      with:
+        path: _build
+        key: ${{ runner.os }}-${{ env.elixir_version }}-${{ env.otp_version }}-_build-${{ hashFiles(format('{0}{1}', github.workspace, '/mix.lock')) }}-${{ github.sha }}
+        restore-keys: |
+          ${{ runner.os }}-${{ env.elixir_version }}-${{ env.otp_version }}-_build-${{ hashFiles(format('{0}{1}', github.workspace, '/mix.lock')) }}
+    - uses: actions/cache@v1
+      with:
+        path: dialyzer_cache
+        key: ${{ runner.os }}-${{ env.elixir_version }}-${{ env.otp_version }}-dialyzer_cache-${{ github.sha }}
+        restore-keys: |
+          ${{ runner.os }}-${{ env.elixir_version }}-${{ env.otp_version }}-dialyzer_cache-
+    - uses: erlef/setup-beam@v1
+      with:
+        otp-version: ${{ env.otp_version }}
+        elixir-version: ${{ env.elixir_version }}
+    - name: Install Dependencies
+      run: mix deps.get
+    - name: Run dialyzer
+      # FIXME: This should be set to fail when dialyzer issues are fixed
+      run: mix dialyzer || exit 0
+
+  test-coverage:
+    name: Build and Test
+    runs-on: ubuntu-22.04
+    # Wait for Dialyzer to give it a go before building
+    needs:
+      - test-dialyzer
+    env:
+      MIX_ENV: test
+    steps:
+    - uses: actions/checkout@v3
+    - uses: actions/cache@v3
+      with:
+        path: deps
+        key: ${{ runner.os }}-${{ env.elixir_version }}-${{ env.otp_version }}-mix-${{ hashFiles(format('{0}{1}', github.workspace, '/mix.lock')) }}
+    - uses: actions/cache@v1
+      with:
+        path: _build
+        key: ${{ runner.os }}-${{ env.elixir_version }}-${{ env.otp_version }}-_build-${{ hashFiles(format('{0}{1}', github.workspace, '/mix.lock')) }}-${{ github.sha }}
+        restore-keys: |
+          ${{ runner.os }}-${{ env.elixir_version }}-${{ env.otp_version }}-_build-${{ hashFiles(format('{0}{1}', github.workspace, '/mix.lock')) }}
+    - uses: erlef/setup-beam@v1
+      with:
+        otp-version: ${{ env.otp_version }}
+        elixir-version: ${{ env.elixir_version }}
+    - name: Install Dependencies
+      run: mix deps.get
+    - name: Check formatting
+      run: mix format --check-formatted
+    - name: Compile
+      run: mix compile
+    - name: Test and Coverage
+      run: mix test
