@@ -129,8 +129,8 @@ defmodule Cyanide do
 
   defp parse_value(0x4, map, key, <<subdoc_size::little-32, subdoc_and_rest::binary>>) do
     with the_size when the_size >= 1 <- subdoc_size - 4,
-         <<subdocument::binary-size(the_size), rest::binary>> <- subdoc_and_rest do
-      array_subdoc = parse_doc_bytes(%{}, subdocument)
+         <<subdocument::binary-size(the_size), rest::binary>> <- subdoc_and_rest,
+         array_subdoc when is_map(array_subdoc) <- parse_doc_bytes(%{}, subdocument) do
       array_max_index = map_size(array_subdoc) - 1
 
       map_array_to_list = fn index, acc ->
