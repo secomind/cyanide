@@ -28,7 +28,12 @@ defmodule Cyanide.MixProject do
       deps: deps(),
       package: package(),
       source_url: "https://github.com/secomind/cyanide",
-      test_coverage: [tool: ExCoveralls],
+      test_coverage: [tool: ExCoveralls]
+    ]
+  end
+
+  def cli do
+    [
       preferred_cli_env: [
         coveralls: :test,
         "coveralls.detail": :test,
