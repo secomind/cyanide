@@ -60,4 +60,24 @@ defmodule Cyanide.Binary do
       _ -> :error
     end
   end
+
+  defimpl Cyanide.Encoder do
+    alias Cyanide.Binary
+
+    def encode(%Binary{subtype: subtype, data: data}) do
+      subtype_int =
+        case subtype do
+          :generic -> 0x00
+          :function -> 0x01
+          :old_binary -> 0x02
+          :old_uuid -> 0x03
+          :uuid -> 0x04
+          :md5 -> 0x05
+          :encrypted_bson -> 0x06
+          ud when is_integer(ud) and ud >= 0x80 and ud <= 0xFF -> ud
+        end
+
+      {subtype_int, data}
+    end
+  end
 end

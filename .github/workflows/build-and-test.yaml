@@ -32,28 +32,28 @@ on:
   pull_request:
 
 env:
-  elixir_version: "1.12"
-  otp_version: "24.2"
+  elixir_version: "1.20"
+  otp_version: "28.0"
 
 jobs:
   test-dialyzer:
     name: Check Dialyzer
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     env:
       MIX_ENV: ci
     steps:
-    - uses: actions/checkout@v3
-    - uses: actions/cache@v3
+    - uses: actions/checkout@v6
+    - uses: actions/cache@v4
       with:
         path: deps
         key: ${{ runner.os }}-${{ env.elixir_version }}-${{ env.otp_version }}-mix-${{ hashFiles(format('{0}{1}', github.workspace, '/mix.lock')) }}
-    - uses: actions/cache@v1
+    - uses: actions/cache@v4
       with:
         path: _build
         key: ${{ runner.os }}-${{ env.elixir_version }}-${{ env.otp_version }}-_build-${{ hashFiles(format('{0}{1}', github.workspace, '/mix.lock')) }}-${{ github.sha }}
         restore-keys: |
           ${{ runner.os }}-${{ env.elixir_version }}-${{ env.otp_version }}-_build-${{ hashFiles(format('{0}{1}', github.workspace, '/mix.lock')) }}
-    - uses: actions/cache@v1
+    - uses: actions/cache@v4
       with:
         path: dialyzer_cache
         key: ${{ runner.os }}-${{ env.elixir_version }}-${{ env.otp_version }}-dialyzer_cache-${{ github.sha }}
@@ -71,19 +71,19 @@ jobs:
 
   test-coverage:
     name: Build and Test
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     # Wait for Dialyzer to give it a go before building
     needs:
       - test-dialyzer
     env:
       MIX_ENV: test
     steps:
-    - uses: actions/checkout@v3
-    - uses: actions/cache@v3
+    - uses: actions/checkout@v6
+    - uses: actions/cache@v4
       with:
         path: deps
         key: ${{ runner.os }}-${{ env.elixir_version }}-${{ env.otp_version }}-mix-${{ hashFiles(format('{0}{1}', github.workspace, '/mix.lock')) }}
-    - uses: actions/cache@v1
+    - uses: actions/cache@v4
       with:
         path: _build
         key: ${{ runner.os }}-${{ env.elixir_version }}-${{ env.otp_version }}-_build-${{ hashFiles(format('{0}{1}', github.workspace, '/mix.lock')) }}-${{ github.sha }}

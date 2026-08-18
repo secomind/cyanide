@@ -102,7 +102,7 @@ defmodule Cyanide do
 
   defp parse_value(0x2, map, key, <<string_size::little-32, string_and_rest::binary>>) do
     with no_zero_size when no_zero_size >= 0 <- string_size - 1,
-         <<value::binary-size(no_zero_size), 0::8, rest::binary>> <- string_and_rest do
+         <<value::binary-size(^no_zero_size), 0::8, rest::binary>> <- string_and_rest do
       Map.put(map, key, value)
       |> parse_doc_bytes(rest)
     else
@@ -113,7 +113,7 @@ defmodule Cyanide do
 
   defp parse_value(0x3, map, key, <<subdoc_size::little-32, subdoc_and_rest::binary>>) do
     with the_size when the_size >= 1 <- subdoc_size - 4,
-         <<subdocument::binary-size(the_size), rest::binary>> <- subdoc_and_rest do
+         <<subdocument::binary-size(^the_size), rest::binary>> <- subdoc_and_rest do
       Map.put(map, key, parse_doc_bytes(%{}, subdocument))
       |> parse_doc_bytes(rest)
     else
@@ -129,7 +129,7 @@ defmodule Cyanide do
 
   defp parse_value(0x4, map, key, <<subdoc_size::little-32, subdoc_and_rest::binary>>) do
     with the_size when the_size >= 1 <- subdoc_size - 4,
-         <<subdocument::binary-size(the_size), rest::binary>> <- subdoc_and_rest,
+         <<subdocument::binary-size(^the_size), rest::binary>> <- subdoc_and_rest,
          array_subdoc when is_map(array_subdoc) <- parse_doc_bytes(%{}, subdocument) do
       array_max_index = map_size(array_subdoc) - 1
 
@@ -144,7 +144,7 @@ defmodule Cyanide do
       end
 
       with values_list when is_list(values_list) <-
-             Enum.reduce_while(array_max_index..0, [], map_array_to_list) do
+             Enum.reduce_while(array_max_index..0//-1, [], map_array_to_list) do
         Map.put(map, key, values_list)
         |> parse_doc_bytes(rest)
       end
@@ -156,7 +156,7 @@ defmodule Cyanide do
 
   defp parse_value(0x5, map, key, <<subdoc_size::little-32, subtype::8, subdoc_and_rest::binary>>) do
     with the_size when the_size >= 0 <- subdoc_size,
-         <<subdocument::binary-size(the_size), rest::binary>> <- subdoc_and_rest,
+         <<subdocument::binary-size(^the_size), rest::binary>> <- subdoc_and_rest,
          {:ok, subtype_atom} <- Binary.cast_subtype(subtype) do
       Map.put(map, key, %Binary{subtype: subtype_atom, data: subdocument})
       |> parse_doc_bytes(rest)
@@ -211,7 +211,7 @@ defmodule Cyanide do
 
   defp split_cstring(blob, n, max_len) when n < max_len do
     case blob do
-      <<cstring::binary-size(n), 0::8, rest::binary>> ->
+      <<cstring::binary-size(^n), 0::8, rest::binary>> ->
         {cstring, rest}
 
       _ ->
@@ -287,22 +287,6 @@ defmodule Cyanide do
     string_size = byte_size(value) + 1
 
     [<<0x2>>, key_string, <<0, string_size::signed-little-32>>, value | <<0>>]
-  end
-
-  defp encode_value(key_string, %Binary{subtype: subtype, data: data}) do
-    subtype_int =
-      case subtype do
-        :generic -> 0x00
-        :function -> 0x01
-        :old_binary -> 0x02
-        :old_uuid -> 0x03
-        :uuid -> 0x04
-        :md5 -> 0x05
-        :encrypted_bson -> 0x06
-        ud when is_integer(ud) and ud >= 0x80 and ud <= 0xFF -> ud
-      end
-
-    encode_value(key_string, {subtype_int, data})
   end
 
   defp encode_value(key_string, %DateTime{} = value) do
